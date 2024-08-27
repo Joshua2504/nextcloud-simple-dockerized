@@ -1,0 +1,1 @@
+*/1 * * * * sudo -u www-data php -f /var/www/html/cron.php

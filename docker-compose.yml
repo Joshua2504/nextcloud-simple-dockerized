@@ -1,0 +1,41 @@
+services:
+  nextcloud:
+    container_name: nextcloud
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "22012:80"
+    volumes:
+      - ./data/nextcloud:/var/www/html
+    depends_on:
+      - nextcloud-redis
+      - nextcloud-mariadb
+    networks:
+      - nextcloud-network
+
+  nextcloud-redis:
+    container_name: nextcloud-redis
+    image: redis:alpine
+    restart: always
+    networks:
+      - nextcloud-network
+
+  nextcloud-mariadb:
+    container_name: nextcloud-mariadb
+    image: mariadb:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER} #another user treudler-nextcloud with same password has been added manually because nextcloud is looking for it after changing the username...
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ./data/db:/var/lib/mysql
+    networks:
+      - nextcloud-network
+
+networks:
+  nextcloud-network:
+    driver: bridge
