@@ -32,3 +32,12 @@ docker compose restart
 docker compose down && docker compose up -d
 docker logs nextcloud --follow
 ```
+
+By default Nextcloud will listen to port ``22012``.
+
+You can change this beheavior by editing the ``docker-compose.yml``:
+
+```
+    ports:
+      - "22012:80"
+```
